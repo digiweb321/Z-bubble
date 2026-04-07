@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Z Bubble Tea 🧋</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --pink:    #FF6EB4;
+      --purple:  #A855F7;
+      --teal:    #2DD4BF;
+      --yellow:  #FFD93D;
+      --orange:  #FF9F43;
+      --mint:    #D1FAE5;
+      --lavender:#EDE9FE;
+      --sky:     #E0F7FF;
+      --white:   #FFFFFF;
+      --dark:    #2D2D2D;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #FFF9FE;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .brand { font-family: 'Bubblegum Sans', cursive; }
+
+    /* FLOATING BUBBLES */
+    .bubbles-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .bubble { position: absolute; border-radius: 50%; opacity: .12; animation: floatUp linear infinite; }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) scale(1); opacity: .15; }
+      100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      box-shadow: 0 4px 20px rgba(168,85,247,.35);
+      padding: .75rem 1.5rem;
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .navbar-brand { font-size: 1.9rem; color: #fff !important; letter-spacing: 1px; }
+    .navbar-brand span { color: var(--yellow); }
+    .nav-link {
+      color: rgba(255,255,255,.9) !important;
+      font-weight: 700; font-size: 1rem;
+      padding: .4rem .9rem !important;
+      border-radius: 20px;
+      transition: background .25s, transform .2s;
+    }
+    .nav-link:hover, .nav-link.active { background: rgba(255,255,255,.22); transform: scale(1.07); }
+    .navbar-toggler { border: 2px solid #fff; }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #FFE4F3 0%, #EDE9FE 50%, #E0F7FF 100%);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 70% 30%, rgba(255,110,180,.15) 0%, transparent 60%),
+                  radial-gradient(circle at 20% 80%, rgba(45,212,191,.15) 0%, transparent 50%);
+    }
+    .hero-title {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      background: linear-gradient(135deg, var(--pink), var(--purple), var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1.1; margin-bottom: 1rem;
+    }
+    .hero-sub { font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: #7c5cbf; font-weight: 700; margin-bottom: 2rem; }
+    .hero-emoji { font-size: 5rem; animation: bounce 2s ease-in-out infinite; display: block; margin-bottom: 1rem; }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-18px); }
+    }
+    .btn-hero {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: #fff; border: none; border-radius: 50px;
+      padding: .85rem 2.5rem; font-size: 1.15rem; font-weight: 800;
+      box-shadow: 0 8px 25px rgba(168,85,247,.4);
+      transition: transform .25s, box-shadow .25s;
+      font-family: 'Bubblegum Sans', cursive;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-hero:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 14px 35px rgba(168,85,247,.55); color: #fff; }
+
+    /* SECTION HEADERS */
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: .5rem;
+    }
+    .section-line {
+      width: 80px; height: 5px; border-radius: 3px; margin: 0 auto 2.5rem;
+      background: linear-gradient(90deg, var(--pink), var(--teal));
+    }
+
+    /* CAROUSEL */
+    #slider { background: linear-gradient(135deg, #FFF0F9, #F0EBFF); padding: 4rem 0; }
+    .carousel-inner { border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(168,85,247,.2); }
+    .carousel-item { height: 420px; }
+    .carousel-slide {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-size: 8rem; gap: .5rem;
+    }
+    .slide-label { font-family: 'Bubblegum Sans', cursive; font-size: 2rem; margin-top: .5rem; }
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+      background-color: var(--purple); border-radius: 50%; padding: 1.2rem; background-size: 60%;
+    }
+    .carousel-indicators [data-bs-target] {
+      width: 14px; height: 14px; border-radius: 50%; background-color: var(--pink); border: none;
+    }
+    .sl1 { background: linear-gradient(135deg,#FFE4F3,#FFC8E8); }
+    .sl2 { background: linear-gradient(135deg,#E0F7FF,#C5EEFF); }
+    .sl3 { background: linear-gradient(135deg,#FFF3D6,#FFE599); }
+    .sl4 { background: linear-gradient(135deg,#D1FAE5,#A7F3D0); }
+    .sl5 { background: linear-gradient(135deg,#EDE9FE,#DDD6FE); }
+    .sl6 { background: linear-gradient(135deg,#FFE4D6,#FFCFB3); }
+
+    /* O NAMA */
+    #o-nama { background: linear-gradient(135deg, var(--lavender), #FFF9FE); padding: 5rem 0; }
+    .about-card {
+      background: #fff; border-radius: 28px; padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(168,85,247,.12);
+      transition: transform .3s, box-shadow .3s; height: 100%;
+    }
+    .about-card:hover { transform: translateY(-8px); box-shadow: 0 20px 55px rgba(168,85,247,.22); }
+    .about-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .about-card h4 { font-family: 'Bubblegum Sans', cursive; color: var(--purple); font-size: 1.6rem; }
+
+    /* RADNO VRIJEME */
+    #radno-vrijeme { background: linear-gradient(135deg,#E0F7FF,#F0EBFF); padding: 5rem 0; }
+    .hours-card {
+      background: #fff; border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(45,212,191,.15);
+      overflow: hidden; max-width: 520px; margin: 0 auto;
+    }
+    .hours-card-header {
+      background: linear-gradient(135deg, var(--teal), var(--purple));
+      color: #fff; text-align: center; padding: 1.5rem;
+      font-family: 'Bubblegum Sans', cursive; font-size: 1.8rem;
+    }
+    .hours-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; border-bottom: 2px dashed #EDE9FE; transition: background .2s;
+    }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-row:hover { background: var(--lavender); }
+    .hours-day { font-weight: 800; color: var(--purple); font-size: 1.05rem; }
+    .hours-time { font-weight: 700; color: var(--dark); }
+    .hours-time.closed { color: #FF6B6B; }
+    .badge-open  { background: var(--teal); color:#fff; border-radius:12px; padding:.2rem .7rem; font-size:.8rem; font-weight:700; }
+    .badge-close { background: #FF6B6B; color:#fff; border-radius:12px; padding:.2rem .7rem; font-size:.8rem; font-weight:700; }
+
+    /* KONTAKT */
+    #kontakt { background: linear-gradient(135deg, #FFF0F9, #FFF9FE); padding: 5rem 0; }
+    .contact-form-wrap {
+      background: #fff; border-radius: 28px; padding: 2.5rem;
+      box-shadow: 0 12px 45px rgba(255,110,180,.15); max-width: 600px; margin: 0 auto;
+    }
+    .form-control {
+      border: 2.5px solid #E9D5FF; border-radius: 14px;
+      padding: .75rem 1.1rem; font-family: 'Nunito', sans-serif; font-size: 1rem;
+      transition: border-color .25s, box-shadow .25s;
+    }
+    .form-control:focus {
+      border-color: var(--purple); box-shadow: 0 0 0 4px rgba(168,85,247,.15); outline: none;
+    }
+    .form-label { font-weight: 800; color: var(--purple); margin-bottom: .4rem; display: block; }
+    .btn-send {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: #fff; border: none; border-radius: 50px;
+      padding: .85rem 2.5rem; font-size: 1.1rem; font-weight: 800;
+      width: 100%; transition: transform .25s, box-shadow .25s;
+      font-family: 'Bubblegum Sans', cursive; cursor: pointer;
+    }
+    .btn-send:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(168,85,247,.4); color: #fff; }
+    .success-msg {
+      display: none; background: linear-gradient(135deg,var(--mint),#A7F3D0);
+      border-radius: 16px; padding: 1.2rem; text-align: center;
+      font-weight: 800; color: #065F46; font-size: 1.1rem; margin-top: 1rem;
+    }
+
+    /* LOKACIJA */
+    #lokacija { background: linear-gradient(135deg,#D1FAE5,#E0F7FF); padding: 5rem 0; }
+    .map-wrapper {
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 15px 50px rgba(45,212,191,.2); border: 4px solid var(--teal);
+    }
+
+    /* RECENZIJE */
+    #recenzije { background: linear-gradient(135deg,#FFF9FE,var(--lavender)); padding: 5rem 0; }
+    .review-card {
+      background: #fff; border-radius: 24px; padding: 2rem; height: 100%;
+      box-shadow: 0 8px 30px rgba(168,85,247,.1); position: relative; overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .review-card::before {
+      content: '"'; font-family: 'Bubblegum Sans', cursive;
+      font-size: 8rem; line-height: 1; color: var(--pink);
+      opacity: .08; position: absolute; top: -1rem; left: 1rem;
+    }
+    .review-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(168,85,247,.2); }
+    .stars { color: var(--yellow); font-size: 1.3rem; margin-bottom: .5rem; }
+    .reviewer { font-weight: 800; color: var(--purple); }
+    .review-date { font-size: .85rem; color: #aaa; }
+    .review-text { color: #555; line-height: 1.7; margin: .75rem 0; }
+    .owner-reply {
+      background: linear-gradient(135deg,var(--mint),#C7F7E7);
+      border-radius: 14px; padding: 1rem 1.2rem; margin-top: 1rem;
+    }
+    .owner-reply strong { color: #065F46; }
+
+    /* FOOTER */
+    footer {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: #fff; text-align: center; padding: 2.5rem 1rem;
+    }
+    footer .brand { font-size: 2rem; color: var(--yellow); }
+    footer p { opacity: .85; margin-top: .5rem; }
+    .footer-socials a {
+      color: #fff; font-size: 1.6rem; margin: 0 .5rem;
+      transition: transform .2s, color .2s;
+    }
+    .footer-socials a:hover { transform: scale(1.3); color: var(--yellow); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* BACK TO TOP */
+    #backTop {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: #fff; border: none; width: 52px; height: 52px;
+      border-radius: 50%; font-size: 1.4rem;
+      box-shadow: 0 6px 20px rgba(168,85,247,.4);
+      display: none; align-items: center; justify-content: center;
+      cursor: pointer; transition: transform .25s;
+    }
+    #backTop:hover { transform: scale(1.15); }
+    #backTop.show { display: flex; }
+
+    @media (max-width: 767px) {
+      .carousel-item { height: 320px; }
+      .carousel-slide { font-size: 5rem; }
+      .slide-label { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bubbles-bg" id="bubblesContainer"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand brand" href="#hero">🧋 Z <span>Bubble</span> Tea</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+      <ul class="navbar-nav gap-1">
+        <li class="nav-item"><a class="nav-link" href="#hero">🏠 Početna</a></li>
+        <li class="nav-item"><a class="nav-link" href="#o-nama">💜 O nama</a></li>
+        <li class="nav-item"><a class="nav-link" href="#kontakt">✉️ Kontakt</a></li>
+        <li class="nav-item"><a class="nav-link" href="#lokacija">📍 Lokacija</a></li>
+        <li class="nav-item"><a class="nav-link" href="#radno-vrijeme">🕐 Radno vrijeme</a></li>
+        <li class="nav-item"><a class="nav-link" href="#recenzije">⭐ Recenzije</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container position-relative">
+    <div class="reveal">
+      <span class="hero-emoji">🧋</span>
+      <h1 class="hero-title">Dobrodošli u<br>Z Bubble Tea!</h1>
+      <p class="hero-sub">🌈 Najslađe mjehuriće u gradu! 🎉</p>
+      <a href="#slider" class="btn-hero me-2">Vidi okuse 🍓</a>
+      <a href="#kontakt" class="btn-hero" style="background:linear-gradient(135deg,var(--teal),var(--purple))">Kontaktiraj nas 💌</a>
+    </div>
+  </div>
+</section>
+
+<!-- CAROUSEL -->
+<section id="slider">
+  <div class="container">
+    <div class="text-center mb-4 reveal">
+      <h2 class="section-title">🍹 Naši Okusi</h2>
+      <div class="section-line"></div>
+    </div>
+    <div id="bubbleCarousel" class="carousel slide carousel-fade reveal" data-bs-ride="carousel" data-bs-interval="2800">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#bubbleCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#bubbleCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#bubbleCarousel" data-bs-slide-to="2"></button>
+        <button type="button" data-bs-target="#bubbleCarousel" data-bs-slide-to="3"></button>
+        <button type="button" data-bs-target="#bubbleCarousel" data-bs-slide-to="4"></button>
+        <button type="button" data-bs-target="#bubbleCarousel" data-bs-slide-to="5"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="carousel-slide sl1">🍓<div class="slide-label">Jagoda &amp; Kokos 🥥</div></div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-slide sl2">🫐<div class="slide-label">Borovnica &amp; Mlijeko 🥛</div></div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-slide sl3">🍋<div class="slide-label">Limun &amp; Med 🍯</div></div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-slide sl4">🍵<div class="slide-label">Matcha &amp; Vanilija 🌿</div></div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-slide sl5">🍇<div class="slide-label">Grožđe &amp; Taro 💜</div></div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-slide sl6">🍑<div class="slide-label">Breskva &amp; Marakuja 🌺</div></div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#bubbleCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#bubbleCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- O NAMA -->
+<section id="o-nama">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <h2 class="section-title">💜 O Nama</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="about-card text-center reveal">
+          <div class="about-icon">🧋</div>
+          <h4>Tko smo mi?</h4>
+          <p class="mt-2" style="color:#555;line-height:1.8;">
+            Hej, mali i veliki prijatelji! Mi smo <strong>Z Bubble Tea</strong> — vaš omiljeni kutak za najslađe i najšarenije napitke u gradu! Svaki gutljaj je puna avantura okusa koja će vas nasmijati od uha do uha! 😄
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="about-card text-center reveal" style="transition-delay:.15s">
+          <div class="about-icon">🌈</div>
+          <h4>Naša priča</h4>
+          <p class="mt-2" style="color:#555;line-height:1.8;">
+            Otvorili smo se s jednom jedinom misijom: <strong>napraviti svaki dan slađim!</strong> Biramo najsvježije voće, kremasto mlijeko i čarobne pearl-kuglice koje plesaju u tvojoj čaši! 🕺
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="about-card text-center reveal" style="transition-delay:.3s">
+          <div class="about-icon">✨</div>
+          <h4>Zašto mi?</h4>
+          <p class="mt-2" style="color:#555;line-height:1.8;">
+            Jer kod nas svaki napitak je <strong>djelo umjetnosti</strong>! Biraš okus, biraš slatkoću, biraš veličinu — i sve to uz naš topli, prijateljski osmijeh. Jednom posjeti i postaješ dio naše obitelji! 🥰
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row g-3 mt-4 text-center">
+      <div class="col-6 col-md-3 reveal">
+        <div style="background:linear-gradient(135deg,var(--pink),#FF9FC8);border-radius:20px;padding:1.5rem;color:#fff">
+          <div style="font-size:2.2rem;font-family:'Bubblegum Sans',cursive">20+</div>
+          <div style="font-weight:700">okusa</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal" style="transition-delay:.1s">
+        <div style="background:linear-gradient(135deg,var(--purple),#C084FC);border-radius:20px;padding:1.5rem;color:#fff">
+          <div style="font-size:2.2rem;font-family:'Bubblegum Sans',cursive">1000+</div>
+          <div style="font-weight:700">sretnih gostiju</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal" style="transition-delay:.2s">
+        <div style="background:linear-gradient(135deg,var(--teal),#34D399);border-radius:20px;padding:1.5rem;color:#fff">
+          <div style="font-size:2.2rem;font-family:'Bubblegum Sans',cursive">100%</div>
+          <div style="font-weight:700">svježe</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 reveal" style="transition-delay:.3s">
+        <div style="background:linear-gradient(135deg,var(--yellow),#FBB740);border-radius:20px;padding:1.5rem;color:#fff">
+          <div style="font-size:2.2rem;font-family:'Bubblegum Sans',cursive">5.0 ⭐</div>
+          <div style="font-weight:700">ocjena gostiju</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RADNO VRIJEME -->
+<section id="radno-vrijeme">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <h2 class="section-title">🕐 Radno Vrijeme</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="reveal">
+      <div class="hours-card">
+        <div class="hours-card-header">🕐 Kada smo otvoreni?</div>
+        <div class="hours-row">
+          <span class="hours-day">Ponedjeljak</span>
+          <span class="hours-time">10:00 – 20:00 <span class="badge-open">Otvoreno</span></span>
+        </div>
+        <div class="hours-row">
+          <span class="hours-day">Utorak</span>
+          <span class="hours-time">10:00 – 20:00 <span class="badge-open">Otvoreno</span></span>
+        </div>
+        <div class="hours-row">
+          <span class="hours-day">Srijeda</span>
+          <span class="hours-time">10:00 – 20:00 <span class="badge-open">Otvoreno</span></span>
+        </div>
+        <div class="hours-row">
+          <span class="hours-day">Četvrtak</span>
+          <span class="hours-time">10:00 – 20:00 <span class="badge-open">Otvoreno</span></span>
+        </div>
+        <div class="hours-row">
+          <span class="hours-day">Petak</span>
+          <span class="hours-time">10:00 – 20:00 <span class="badge-open">Otvoreno</span></span>
+        </div>
+        <div class="hours-row">
+          <span class="hours-day">Subota</span>
+          <span class="hours-time">10:00 – 18:00 <span class="badge-open">Otvoreno</span></span>
+        </div>
+        <div class="hours-row">
+          <span class="hours-day">Nedjelja</span>
+          <span class="hours-time closed">Zatvoreno <span class="badge-close">Zatvoreno</span></span>
+        </div>
+      </div>
+      <p class="text-center mt-3" style="color:var(--purple);font-weight:700;font-size:1.1rem;">
+        🎉 Svaki dan je poseban kod nas — dođite po svoju dozu sreće!
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <h2 class="section-title">✉️ Kontakt</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-form-wrap reveal">
+      <div class="text-center mb-4">
+        <span style="font-size:3rem">💌</span>
+        <p style="color:#777;font-weight:600;margin-top:.5rem">Pošalji nam poruku — odgovaramo s osmijehom! 😊</p>
+      </div>
+      <div id="contactForm">
+        <div class="mb-3">
+          <label class="form-label">👤 Tvoje ime</label>
+          <input type="text" class="form-control" id="contactName" placeholder="Upiši svoje ime...">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">📧 E-mail adresa</label>
+          <input type="email" class="form-control" id="contactEmail" placeholder="tvoj@email.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">💬 Poruka</label>
+          <textarea class="form-control" id="contactMsg" rows="4" placeholder="Napiši nam što te zanima..."></textarea>
+        </div>
+        <button class="btn-send" onclick="sendForm()">Pošalji poruku 🚀</button>
+      </div>
+      <div class="success-msg" id="successMsg">
+        🎉 Hvala! Tvoja poruka je poslana! Javimo ti se što prije! 🧋💜
+      </div>
+    </div>
+    <div class="row g-3 mt-4 text-center">
+      <div class="col-md-4 reveal">
+        <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 8px 25px rgba(168,85,247,.1)">
+          <div style="font-size:2rem">📞</div>
+          <div style="font-weight:800;color:var(--purple);margin-top:.5rem">Telefon</div>
+          <div style="color:#555">+385 91 234 5678</div>
+        </div>
+      </div>
+      <div class="col-md-4 reveal" style="transition-delay:.1s">
+        <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 8px 25px rgba(168,85,247,.1)">
+          <div style="font-size:2rem">📧</div>
+          <div style="font-weight:800;color:var(--purple);margin-top:.5rem">Email</div>
+          <div style="color:#555">info@zbubble.hr</div>
+        </div>
+      </div>
+      <div class="col-md-4 reveal" style="transition-delay:.2s">
+        <div style="background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 8px 25px rgba(168,85,247,.1)">
+          <div style="font-size:2rem">📸</div>
+          <div style="font-weight:800;color:var(--purple);margin-top:.5rem">Instagram</div>
+          <div style="color:#555">@zbubble.tea</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOKACIJA -->
+<section id="lokacija">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <h2 class="section-title">📍 Lokacija</h2>
+      <div class="section-line"></div>
+      <p style="color:var(--purple);font-weight:700;font-size:1.1rem;">Pronađi nas u Z centru! 🏙️</p>
+    </div>
+    <div class="map-wrapper reveal">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2781.9213661746384!2d15.900867576940536!3d45.806158071082874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4765d4a4f6b8f0b5%3A0x5d3b3b3b3b3b3b3b!2sLjubljanska%20avenija%202b%2C%2010000%2C%20Zagreb!5e0!3m2!1shr!2shr!4v1699000000000!5m2!1shr!2shr"
+        width="100%" height="420" style="border:0;display:block;" allowfullscreen loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <div class="text-center mt-3">
+      <span style="background:#fff;border-radius:50px;padding:.6rem 1.5rem;box-shadow:0 4px 20px rgba(45,212,191,.2);font-weight:700;color:var(--dark);display:inline-block">
+        📍 Ljubljanska avenija 2b, 10000 Zagreb (Z centar)
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- RECENZIJE -->
+<section id="recenzije">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <h2 class="section-title">⭐ Što kažu gosti?</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 reveal">
+        <div class="review-card">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <div class="reviewer">Danijela M.</div>
+          <div class="review-date">📅 prije 2 tjedna &nbsp;<span style="background:var(--pink);color:#fff;border-radius:10px;padding:.1rem .5rem;font-size:.8rem;font-weight:700">Novo</span></div>
+          <p class="review-text">
+            Rijetko kad pišem recenzije, ali vidim da Z Bubble nema ni jednu, a zaslužuju definitivno! Bubble tea je bila fantastična — svježa, kremasta, i mjehurići savršene teksture! 🧋✨ Osoblje je super ljubazno i toplo. Definitivno se vraćam!
+          </p>
+          <div class="owner-reply">
+            <strong>💜 Odgovor vlasnika:</strong>
+            <p style="margin-top:.4rem;color:#065F46;font-size:.95rem">
+              Hvala ti Danijela! 😊 Drago nam je da uživaš u našim okusima — odličan izbor favorita! Vidimo se uskoro! 🧋🎉
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 reveal" style="transition-delay:.15s">
+        <div class="review-card">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <div class="reviewer">Marko K.</div>
+          <div class="review-date">📅 prije 2 tjedna &nbsp;<span style="background:var(--pink);color:#fff;border-radius:10px;padding:.1rem .5rem;font-size:.8rem;font-weight:700">Novo</span></div>
+          <p class="review-text">
+            Hrana: 🌟 5/5 &nbsp;|&nbsp; Usluga: 🌟 5/5<br><br>
+            Savršeno mjesto! Bubble tea je bila nevjerojatna, a osoblje izuzetno ljubazno i profesionalno. Djeca su bila oduševljena bojama i ukusima! Svakako preporučujem svima! 😍🫐🍓
+          </p>
+          <div class="owner-reply">
+            <strong>💜 Odgovor vlasnika:</strong>
+            <p style="margin-top:.4rem;color:#065F46;font-size:.95rem">
+              Hvala Marko! 🥰 Vaše zadovoljstvo je naša najveća nagrada. Jedva čekamo vaš sljedeći posjet! 🧋
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 reveal" style="transition-delay:.3s">
+        <div class="review-card">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <div class="reviewer">Ana L.</div>
+          <div class="review-date">📅 prije tjedan dana</div>
+          <p class="review-text">
+            Odvela sam djecu i bila sam očarana! Mali već pitaju kada idemo opet 😂 Jagoda s kokos mlijekom — nešto savršeno! Prostor je šaren i veseo, baš za djecu. 🌈
+          </p>
+          <div class="owner-reply">
+            <strong>💜 Odgovor vlasnika:</strong>
+            <p style="margin-top:.4rem;color:#065F46;font-size:.95rem">
+              Super! Jedva čekamo ugostiti vaše male gurmane opet! 🥰 Do skorog viđenja!
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 reveal" style="transition-delay:.45s">
+        <div class="review-card">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <div class="reviewer">Petra V.</div>
+          <div class="review-date">📅 prije 3 tjedna</div>
+          <p class="review-text">
+            Matcha bubble tea je bila izvan svake konkurencije! 🍵 Kremasta, savršeno slatka i mjehurići su bili jako dobri. Osoblje je bilo super ljubazno i strpljivo. Apsolutno preporučujem! 💯
+          </p>
+          <div class="owner-reply">
+            <strong>💜 Odgovor vlasnika:</strong>
+            <p style="margin-top:.4rem;color:#065F46;font-size:.95rem">
+              Hvala Petra! Matcha je jedan od naših favorita! 🍵💚 Vidimo se uskoro!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">🧋 Z Bubble Tea</div>
+  <div class="footer-socials mt-3">
+    <a href="#"><i class="bi bi-instagram"></i></a>
+    <a href="#"><i class="bi bi-facebook"></i></a>
+    <a href="#"><i class="bi bi-tiktok"></i></a>
+  </div>
+  <p class="mt-3">📍 Ljubljanska avenija 2b, 10000 Zagreb (Z centar) &nbsp;|&nbsp; 📞 +385 91 234 5678</p>
+  <p class="mt-1" style="font-size:.9rem;opacity:.7">© 2025 Z Bubble Tea. Sva prava pridržana. Napravljeno s 💜 i puno mjehurića!</p>
+</footer>
+
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  (function(){
+    const colors = ['#FF6EB4','#A855F7','#2DD4BF','#FFD93D','#FF9F43','#818CF8'];
+    const container = document.getElementById('bubblesContainer');
+    for(let i = 0; i < 22; i++){
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = Math.random() * 80 + 30;
+      b.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'%;background:'+colors[Math.floor(Math.random()*colors.length)]+';animation-duration:'+(Math.random()*12+8)+'s;animation-delay:'+(Math.random()*10)+'s;';
+      container.appendChild(b);
+    }
+  })();
+
+  const observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+
+  window.addEventListener('scroll', function(){
+    let current = '';
+    document.querySelectorAll('section[id]').forEach(function(s){
+      if(window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    document.querySelectorAll('.nav-link').forEach(function(l){
+      l.classList.remove('active');
+      if(l.getAttribute('href') === '#'+current) l.classList.add('active');
+    });
+    var btn = document.getElementById('backTop');
+    if(window.scrollY > 400) btn.classList.add('show'); else btn.classList.remove('show');
+  });
+
+  function sendForm(){
+    var name  = document.getElementById('contactName').value.trim();
+    var email = document.getElementById('contactEmail').value.trim();
+    var msg   = document.getElementById('contactMsg').value.trim();
+    if(!name || !email || !msg){ alert('Molimo ispuni sva polja!'); return; }
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('successMsg').style.display  = 'block';
+  }
+</script>
+</body>
+</html>
